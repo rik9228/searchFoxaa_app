@@ -1,4 +1,4 @@
-# poke_app_02
+# searchFox_app
 
 ## Project setup
 ```
