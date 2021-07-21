@@ -4,7 +4,10 @@
       <div class="loader"></div>
       <p>狐とわんちゃんを{{ getDataCount }}匹数呼び出しています...</p>
     </div>
-    <dogList :imagesInfo="imagesInfo" v-if="showFlag" />
+
+    <div v-if="showFlag">
+      <dogList :imageInfos="imageInfos" />
+    </div>
   </div>
 </template>
 
@@ -18,34 +21,40 @@ export default {
   },
   data() {
     return {
-      imagesInfo: [],
+      imageInfos: [],
       showFlag: false,
       loading: false,
       getDataCount: 0,
     };
   },
   async created() {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 5; i++) {
       const url = "https://dog.ceo/api/breeds/image/random";
       const result = await axios.get(url);
-      this.getDataCount = this.imagesInfo.length;
-      this.imagesInfo.push(result.data.message);
+      this.getDataCount = this.imageInfos.length;
+      this.imageInfos.push({
+        src: result.data.message,
+        category: "dog",
+      });
     }
 
     const url = "https://randomfox.ca/floof/";
     const result = await axios.get(url);
-    this.imagesInfo.push(result.data.image);
+    this.imageInfos.push({
+      src: result.data.image,
+      category: "fox",
+    });
     this.getDataCount = this.getDataCount + 1;
 
-    this.imagesInfo = this.shuffle(this.imagesInfo);
+    this.imageInfos = this.shuffle(this.imageInfos);
     this.showFlag = true;
     this.loading = true;
   },
-  watch: {
-    getDataCount: function(newVal) {
-      console.log(newVal);
-    },
-  },
+  // watch: {
+  //   getDataCount: function(newVal) {
+  //     console.log(newVal);
+  //   },
+  // },
   methods: {
     shuffle([...array]) {
       for (let i = array.length - 1; i >= 0; i--) {
