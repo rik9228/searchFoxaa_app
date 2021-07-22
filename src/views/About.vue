@@ -6,18 +6,26 @@
     </div>
 
     <div v-if="showFlag">
-      <dogList :imageInfos="imageInfos" />
+      <dogList :imageInfos="imageInfos" @shuffleInfo="shuffleInfo" />
     </div>
+    {{ this.num }}
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import dogList from "@/components/DogList.vue";
+import _ from "lodash";
 export default {
   name: "About",
   components: {
     dogList,
+  },
+  props: {
+    num: {
+      Type: Number,
+      require: true,
+    },
   },
   data() {
     return {
@@ -28,13 +36,14 @@ export default {
     };
   },
   async created() {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < this.num; i++) {
       const url = "https://dog.ceo/api/breeds/image/random";
       const result = await axios.get(url);
       this.getDataCount = this.imageInfos.length;
       this.imageInfos.push({
         src: result.data.message,
         category: "dog",
+        id: i,
       });
     }
 
@@ -43,71 +52,25 @@ export default {
     this.imageInfos.push({
       src: result.data.image,
       category: "fox",
+      id: this.imageInfos.length + 1,
     });
     this.getDataCount = this.getDataCount + 1;
 
-    this.imageInfos = this.shuffle(this.imageInfos);
+    this.imageInfos = _.shuffle(this.imageInfos);
     this.showFlag = true;
     this.loading = true;
   },
-  // watch: {
-  //   getDataCount: function(newVal) {
-  //     console.log(newVal);
-  //   },
-  // },
   methods: {
-    shuffle([...array]) {
-      for (let i = array.length - 1; i >= 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
+    // shuffle([...array]) {
+    //   for (let i = array.length - 1; i >= 0; i--) {
+    //     const j = Math.floor(Math.random() * (i + 1));
+    //     [array[i], array[j]] = [array[j], array[i]];
+    //   }
+    //   return array;
+    // },
+    shuffleInfo() {
+      this.imageInfos = _.shuffle(this.imageInfos);
     },
   },
 };
 </script>
-
-<style>
-.loader,
-.loader:after {
-  border-radius: 50%;
-  width: 6em;
-  height: 6em;
-}
-.loader {
-  margin: 60px auto;
-  font-size: 10px;
-  position: relative;
-  text-indent: -9999em;
-  border-top: 1.1em solid rgba(94, 94, 94, 0.2);
-  border-right: 1.1em solid rgba(94, 94, 94, 0.2);
-  border-bottom: 1.1em solid rgba(94, 94, 94, 0.2);
-  border-left: 1.1em solid #5e5e5e;
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-animation: load8 1.1s infinite linear;
-  animation: load8 1.1s infinite linear;
-}
-
-@-webkit-keyframes load8 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-@keyframes load8 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-</style>

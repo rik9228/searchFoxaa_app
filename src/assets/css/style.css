@@ -1,0 +1,147 @@
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+
+#nav {
+  padding: 30px;
+}
+
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
+}
+
+h3 {
+  margin: 40px 0 0;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+a {
+  color: #42b983;
+}
+
+.dogList {
+  margin-top: 40px;
+}
+
+.loader,
+.loader:after {
+  border-radius: 50%;
+  width: 6em;
+  height: 6em;
+}
+.loader {
+  margin: 60px auto;
+  font-size: 10px;
+  position: relative;
+  text-indent: -9999em;
+  border-top: 1.1em solid rgba(94, 94, 94, 0.2);
+  border-right: 1.1em solid rgba(94, 94, 94, 0.2);
+  border-bottom: 1.1em solid rgba(94, 94, 94, 0.2);
+  border-left: 1.1em solid #5e5e5e;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: load8 1.1s infinite linear;
+  animation: load8 1.1s infinite linear;
+}
+
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.dogList {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.image {
+  height: 250px;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.images {
+  position: relative;
+}
+
+.isFalse {
+  position: relative;
+}
+
+.isFalse::before,
+.isFalse::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  background: #000;
+}
+
+.isFalse::before {
+  transform: rotate(-45deg);
+}
+
+.isFalse::after {
+  transform: rotate(45deg);
+}
+
+.isActive {
+  position: relative;
+  transition: 0.5s;
+}
+
+.isActive::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  background: transparent;
+  border: red 10px solid;
+  border-radius: 100%;
+}
+
+/* .isActive::before {
+} */
+
+.v-move {
+  transition: transform 0.5s;
+}
