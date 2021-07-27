@@ -1,5 +1,7 @@
 <template>
   <div class="hello">
+    <h1>キツネ探し当てゲーム</h1>
+    <img alt="Vue logo" src="https://blogimg.goo.ne.jp/user_image/3f/13/fe1f78ded2409e795b25be9d48cc1e0a.png" />
     <h2 class="text-center">動物の中に紛れたキツネを探し当てて下さい。</h2>
     <p class="mt-5">難易度を選択する</p>
     <ul class="pl-0">
