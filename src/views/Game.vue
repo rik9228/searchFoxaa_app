@@ -3,10 +3,14 @@
     <div class="loading-wrap" v-if="!loading">
       <div class="loader"></div>
       <p>狐とわんちゃんを{{ gotDataCount }}匹数呼び出しています...</p>
+      <ul>
+        <!-- <li v-for="(fact, factIdx) in facts" :key="factIdx">{{ facts[factIdx].description }}</li> -->
+        <!-- <li>{{ displayFactDescription }}</li> -->
+      </ul>
     </div>
 
     <div v-if="showFlag">
-      <dogList :imageInfos="imageInfos" @shuffleInfo="shuffleInfo" />
+      <animals :imageInfos="imageInfos" @shuffleInfo="shuffleInfo" />
     </div>
   </div>
 </template>
@@ -14,22 +18,25 @@
 <script>
 // import { mapGetters } from "vuex";
 import axios from "axios";
-import dogList from "@/components/DogList.vue";
+import animals from "@/components/Animals.vue";
 import _ from "lodash";
 export default {
   name: "Game",
   components: {
-    dogList,
+    animals,
   },
   props: {
-    difficaltyNum: {
+    difficaltyInfo: {
       Type: Number,
       require: true,
     },
     facts: {
-      Type: Array,
+      Type: Object,
       require: true,
     },
+  },
+  mounted() {
+    console.log(this.difficaltyInfo);
   },
   data() {
     return {
@@ -41,9 +48,7 @@ export default {
   },
   async created() {
     // this.$store.dispatch("game/fetchImages");
-    console.log(this.facts);
-
-    for (let i = 0; i < this.difficaltyNum; i++) {
+    for (let i = 0; i < this.difficaltyInfo.animals; i++) {
       const url = "https://dog.ceo/api/breeds/image/random";
       const result = await axios.get(url);
       this.imageInfos.push({
@@ -51,17 +56,18 @@ export default {
         category: "dog",
         id: i,
       });
-      // console.log(this.imagesInfo);
       this.gotDataCount = this.imageInfos.length;
     }
 
-    const url = "https://randomfox.ca/floof/";
-    const result = await axios.get(url);
-    this.imageInfos.push({
-      src: result.data.image,
-      category: "fox",
-      id: this.imageInfos.length + 1,
-    });
+    for (let i = 0; i < this.difficaltyInfo.fox; i++) {
+      const url = "https://randomfox.ca/floof/";
+      const result = await axios.get(url);
+      this.imageInfos.push({
+        src: result.data.image,
+        category: "fox",
+        id: this.imageInfos.length + 1,
+      });
+    }
 
     this.gotDataCount = this.gotDataCount + 1;
     this.imageInfos = _.shuffle(this.imageInfos);
@@ -71,15 +77,21 @@ export default {
 
     // this.shuffleInfoSec();
   },
-  // computed: {
-  //   ...mapGetters({
-  //     difficalty: "game/difficalty",
-  //     imageInfos: "game/imageInfos",
-  //     gotDataCount: "game/gotDataCount",
-  //     loading: "game/loading",
-  //     showFlag: "game/showFlag",
-  //   }),
-  // },
+
+  computed: {
+    // displayFactDescription() {
+    //   return setTimeout(() => {
+    //     return this.facts[2].description;
+    //   }, 3000);
+    // },
+    // ...mapGetters({
+    //   difficalty: "game/difficalty",
+    //   imageInfos: "game/imageInfos",
+    //   gotDataCount: "game/gotDataCount",
+    //   loading: "game/loading",
+    //   showFlag: "game/showFlag",
+    // }),
+  },
   methods: {
     // shuffle([...array]) {
     //   for (let i = array.length - 1; i >= 0; i--) {
@@ -92,12 +104,12 @@ export default {
       this.imageInfos = _.shuffle(this.imageInfos);
     },
 
-    shuffleInfoSec() {
-      setTimeout(() => {
-        this.shuffleInfo();
-      }, 2500);
-      this.shuffleInfoSec();
-    },
+    // shuffleInfoSec() {
+    //   setTimeout(() => {
+    //     this.shuffleInfo();
+    //   }, 2500);
+    //   this.shuffleInfoSec();
+    // },
   },
 };
 </script>

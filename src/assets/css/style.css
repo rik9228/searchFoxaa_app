@@ -34,6 +34,12 @@ a {
   color: #42b983;
 }
 
+.mainVisual {
+  max-width: 500px;
+  margin: 16px 0;
+  border-radius: 10px;
+}
+
 .dogList {
   margin-top: 40px;
 }
@@ -92,6 +98,7 @@ a {
   width: 100%;
   object-fit: cover;
   display: block;
+  filter: blur(12px);
 }
 
 .images {
@@ -137,6 +144,7 @@ a {
   background: transparent;
   border: red 10px solid;
   border-radius: 100%;
+  z-index: 10;
 }
 
 /* .isActive::before {
