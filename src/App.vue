@@ -1,6 +1,17 @@
 <template>
-  <div id="app">
-    <h1>キツネ探し当てゲーム</h1>
-    <router-view />
-  </div>
+  <v-app>
+    <div id="app">
+      <router-view />
+    </div>
+  </v-app>
 </template>
+
+<script>
+export default {
+  name: "App",
+
+  data: () => ({
+    //
+  }),
+};
+</script>
