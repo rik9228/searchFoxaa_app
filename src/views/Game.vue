@@ -53,16 +53,16 @@ export default {
   },
   async created() {
     // this.$store.dispatch("game/fetchImages");
-    for (let i = 0; i < this.difficaltyInfo.animals; i++) {
-      const url = "https://dog.ceo/api/breeds/image/random";
-      const result = await axios.get(url);
+    const url = `https://dog.ceo/api/breeds/image/random/${this.difficaltyInfo.animals}`;
+    const animals = await axios.get(url);
+    animals.data.message.forEach((animal, index) => {
       this.imageInfos.push({
-        src: result.data.message,
+        src: animal,
         category: "dog",
-        id: i,
+        id: index,
       });
-      this.gotDataCount = this.imageInfos.length;
-    }
+    });
+    this.gotDataCount = this.imageInfos.length;
 
     for (let i = 0; i < this.difficaltyInfo.fox; i++) {
       const url = "https://randomfox.ca/floof/";
