@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="container">
     <div class="loading-wrap" v-if="!loading">
       <div class="loader"></div>
       <p>狐とわんちゃんを{{ gotDataCount }}匹数呼び出しています...</p>
@@ -10,7 +10,9 @@
     </div>
 
     <div v-if="showFlag">
-      <animals :imageInfos="imageInfos" @shuffleInfo="shuffleInfo" />
+      <animals @judgeImage="judgeImage" :targetFoxCount="difficaltyInfo.fox" :imageInfos="imageInfos" @shuffleInfo="shuffleInfo" />
+      <timer @stopTimerHandler="stopTimer" ref="timer" class="mt-8" />
+      <result @showResultHandler="showResult" :foundFoxes="foundFoxes" ref="result"></result>
     </div>
   </div>
 </template>
@@ -19,15 +21,20 @@
 // import { mapGetters } from "vuex";
 import axios from "axios";
 import animals from "@/components/Animals.vue";
+import result from "@/components/Result.vue";
+import timer from "@/components/Timer.vue";
 import _ from "lodash";
+
 export default {
   name: "Game",
   components: {
     animals,
+    timer,
+    result,
   },
   props: {
     difficaltyInfo: {
-      Type: Number,
+      Type: Object,
       require: true,
     },
     facts: {
@@ -35,15 +42,13 @@ export default {
       require: true,
     },
   },
-  mounted() {
-    console.log(this.difficaltyInfo);
-  },
   data() {
     return {
       loading: false,
       showFlag: false,
       gotDataCount: 0,
       imageInfos: [],
+      foundFoxes: [],
     };
   },
   async created() {
@@ -74,8 +79,6 @@ export default {
 
     this.loading = true;
     this.showFlag = true;
-
-    // this.shuffleInfoSec();
   },
 
   computed: {
@@ -104,6 +107,25 @@ export default {
       this.imageInfos = _.shuffle(this.imageInfos);
     },
 
+    judgeImage(...targetImageValues) {
+      const [targetImageDatasetValue, targetImageSrcValue] = targetImageValues;
+      if (targetImageDatasetValue === "fox") {
+        this.foundFoxes.push(targetImageSrcValue);
+        console.log("this.foundFoxes.length=>", this.foundFoxes.length);
+        console.log("this.targetFoxCount=>", this.difficaltyInfo.fox);
+      }
+      if (this.foundFoxes.length === this.difficaltyInfo.fox) {
+        this.stopTimer();
+        this.showResult();
+        return;
+      }
+    },
+    stopTimer() {
+      this.$refs.timer.stopTimer();
+    },
+    showResult() {
+      this.$refs.result.showResult();
+    },
     // shuffleInfoSec() {
     //   setTimeout(() => {
     //     this.shuffleInfo();
