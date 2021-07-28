@@ -127,7 +127,7 @@ export default {
     return {
       difficaltyInfo: {
         easy: {
-          animals: 10,
+          animals: 5,
           fox: 2,
         },
         normal: {
@@ -135,7 +135,7 @@ export default {
           fox: 2,
         },
         hard: {
-          animals: 30,
+          animals: 50,
           fox: 5,
         },
       },
@@ -177,7 +177,7 @@ export default {
   methods: {
     updateDifficalty(difficaltyInfo) {
       // this.$store.commit("game/updateDifficalty", difficaltyInfo);
-      if (difficaltyInfo.animals === 10) {
+      if (difficaltyInfo.animals === 5) {
         this.dialog.easy = false;
       }
 
