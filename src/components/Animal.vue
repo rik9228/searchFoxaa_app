@@ -1,7 +1,7 @@
 <template>
   <div :key="image.id">
-    <img v-if="image.category === 'dog'" class="image" :src="image.src" @click="judgeImage($event)" data-category="dog" ref="image" />
-    <img v-else class="image" :src="image.src" @click="judgeImage($event)" data-category="fox" ref="image" />
+    <img v-if="image.category === 'dog'" class="image" :src="image.src" @click="judgeImage(image.src)" data-category="dog" ref="image" />
+    <img v-else class="image" :src="image.src" @click="judgeImage(image.src)" data-category="fox" ref="image" />
   </div>
 </template>
 
@@ -11,6 +11,10 @@ export default {
   props: {
     image: {
       type: Object,
+      require: true,
+    },
+    targetFoxCount: {
+      type: Number,
       require: true,
     },
   },
@@ -26,13 +30,8 @@ export default {
     this.countDownTimer(this.animalImage);
   },
   methods: {
-    judgeImage(event) {
-      if (event.target.dataset.category === "dog") {
-        event.target.parentNode.classList.add("isFalse");
-      }
-      if (event.target.dataset.category === "fox") {
-        event.target.parentNode.classList.add("isActive");
-      }
+    judgeImage(imgValue) {
+      this.$emit("judgeImage", this.animalImage.dataset.category, imgValue);
     },
     countDownTimer() {
       if (this.filterNum > 0) {
@@ -40,7 +39,7 @@ export default {
           this.filterNum--;
           this.animalImage.style.filter = `blur(${this.filterNum}px)`;
           this.countDownTimer();
-        }, 3000);
+        }, 2500);
       }
     },
   },
