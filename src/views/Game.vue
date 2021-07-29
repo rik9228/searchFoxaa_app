@@ -72,9 +72,9 @@ export default {
         category: "fox",
         id: this.imageInfos.length + 1,
       });
+      this.gotDataCount = this.gotDataCount + i;
     }
 
-    this.gotDataCount = this.gotDataCount + 1;
     this.imageInfos = _.shuffle(this.imageInfos);
 
     this.loading = true;
