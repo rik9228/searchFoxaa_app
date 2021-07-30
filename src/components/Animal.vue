@@ -1,11 +1,13 @@
 <template>
-  <div :key="image.id">
+  <div :key="image.id" :class="{ fox: isFox }" class="image-wrap">
     <img v-if="image.category === 'dog'" class="image" :src="image.src" @click="judgeImage(image.src)" data-category="dog" ref="image" />
     <img v-else class="image" :src="image.src" @click="judgeImage(image.src)" data-category="fox" ref="image" />
   </div>
 </template>
 
 <script>
+import dogSe from "@/assets/sounds/dog_se.mp3";
+import foxSe from "@/assets/sounds/fox_se.mp3";
 export default {
   name: "animal",
   props: {
@@ -20,8 +22,9 @@ export default {
   },
   data() {
     return {
-      filterNum: 12,
+      filterNum: 8,
       animalImage: null,
+      isFox: false,
     };
   },
   mounted() {
@@ -31,6 +34,12 @@ export default {
   },
   methods: {
     judgeImage(imgValue) {
+      if (this.animalImage.dataset.category === "fox") {
+        this.isFox = true;
+        this.$playSound(foxSe);
+      } else {
+        this.$playSound(dogSe);
+      }
       this.$emit("judgeImage", this.animalImage.dataset.category, imgValue);
     },
     countDownTimer() {
