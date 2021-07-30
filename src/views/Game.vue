@@ -10,7 +10,7 @@
     </div>
 
     <div v-if="showFlag">
-      <animals @judgeImage="judgeImage" :targetFoxCount="difficaltyInfo.fox" :imageInfos="imageInfos" @shuffleInfo="shuffleInfo" />
+      <animals @judgeImage="judgeImage" :targetFoxCount="selectedDifficalty.fox" :imageInfos="imageInfos" @shuffleInfo="shuffleInfo" />
       <timer @stopTimerHandler="stopTimer" ref="timer" class="mt-8" />
       <result @showResultHandler="showResult" :foundFoxes="foundFoxes" ref="result"></result>
     </div>
@@ -33,11 +33,7 @@ export default {
     result,
   },
   props: {
-    difficaltyInfo: {
-      Type: Object,
-      require: true,
-    },
-    facts: {
+    selectedDifficalty: {
       Type: Object,
       require: true,
     },
@@ -53,7 +49,7 @@ export default {
   },
   async created() {
     // this.$store.dispatch("game/fetchImages");
-    const url = `https://dog.ceo/api/breeds/image/random/${this.difficaltyInfo.animals}`;
+    const url = `https://dog.ceo/api/breeds/image/random/${this.selectedDifficalty.animals}`;
     const animals = await axios.get(url);
     animals.data.message.forEach((animal, index) => {
       this.imageInfos.push({
@@ -64,7 +60,7 @@ export default {
     });
     this.gotDataCount = this.imageInfos.length;
 
-    for (let i = 0; i < this.difficaltyInfo.fox; i++) {
+    for (let i = 0; i < this.selectedDifficalty.fox; i++) {
       const url = "https://randomfox.ca/floof/";
       const result = await axios.get(url);
       this.imageInfos.push({
@@ -72,7 +68,7 @@ export default {
         category: "fox",
         id: this.imageInfos.length + 1,
       });
-      this.gotDataCount = this.gotDataCount + i;
+      this.gotDataCount++;
     }
 
     this.imageInfos = _.shuffle(this.imageInfos);
@@ -112,9 +108,9 @@ export default {
       if (targetImageDatasetValue === "fox") {
         this.foundFoxes.push(targetImageSrcValue);
         console.log("this.foundFoxes.length=>", this.foundFoxes.length);
-        console.log("this.targetFoxCount=>", this.difficaltyInfo.fox);
+        console.log("this.targetFoxCount=>", this.selectedDifficalty.fox);
       }
-      if (this.foundFoxes.length === this.difficaltyInfo.fox) {
+      if (this.foundFoxes.length === this.selectedDifficalty.fox) {
         this.stopTimer();
         this.showResult();
         return;
