@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="shuffleInfo">並べ替え</button>
+    <v-btn @click="shuffleInfo" class="success">並べ替え</v-btn>
     <transition-group tag="div" class="dogList">
       <div class="images" v-for="image in imageInfos" :key="image.id">
         <animal @judgeImage="judgeImage" :targetFoxCount="targetFoxCount" :image="image"></animal>
