@@ -15,6 +15,12 @@ Vue.component("font-awesome-icon", FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 
+Vue.prototype.$playSound = (path, volume = 1) => {
+  var audio = new Audio(path);
+  audio.volume = volume;
+  audio.play();
+};
+
 new Vue({
   store,
   router,
