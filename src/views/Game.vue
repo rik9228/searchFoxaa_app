@@ -11,8 +11,8 @@
 
     <div v-if="showFlag">
       <animals @judgeImage="judgeImage" :targetFoxCount="selectedDifficalty.fox" :imageInfos="imageInfos" @shuffleInfo="shuffleInfo" />
-      <timer @stopTimerHandler="stopTimer" ref="timer" class="mt-8" />
-      <result @showResultHandler="showResult" :foundFoxes="foundFoxes" ref="result"></result>
+      <timer @stopTimeHandler="stopTimer" ref="timer" class="mt-8" />
+      <result @showResult="showResult" :foundFoxes="foundFoxes" :wrongCount="wrongCount" ref="result"></result>
     </div>
   </div>
 </template>
@@ -45,6 +45,7 @@ export default {
       gotDataCount: 0,
       imageInfos: [],
       foundFoxes: [],
+      wrongCount: 0,
     };
   },
   async created() {
@@ -109,6 +110,8 @@ export default {
         this.foundFoxes.push(targetImageSrcValue);
         console.log("this.foundFoxes.length=>", this.foundFoxes.length);
         console.log("this.targetFoxCount=>", this.selectedDifficalty.fox);
+      } else {
+        this.wrongCount++;
       }
       if (this.foundFoxes.length === this.selectedDifficalty.fox) {
         this.stopTimer();
@@ -117,7 +120,7 @@ export default {
       }
     },
     stopTimer() {
-      this.$refs.timer.stopTimer();
+      this.$refs.timer.stopTimeHandler();
     },
     showResult() {
       this.$refs.result.showResult();

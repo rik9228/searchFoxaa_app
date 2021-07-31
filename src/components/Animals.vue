@@ -31,6 +31,7 @@ export default {
       this.$emit("shuffleInfo", this.imageInfos);
     },
     judgeImage(...targetImageValues) {
+      console.log(...targetImageValues);
       this.$emit("judgeImage", ...targetImageValues);
     },
   },

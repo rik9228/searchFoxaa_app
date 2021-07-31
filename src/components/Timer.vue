@@ -31,7 +31,9 @@ export default {
       this.active = false;
       this.accum = this.interval;
       clearInterval(this.timer);
-      this.$emit("stopTimer");
+    },
+    stopTimeHandler() {
+      this.$emit("stopTimeHandler");
     },
   },
 };

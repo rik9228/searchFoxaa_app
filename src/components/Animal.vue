@@ -37,10 +37,11 @@ export default {
       if (this.animalImage.dataset.category === "fox") {
         this.isFox = true;
         this.$playSound(foxSe);
+        this.$emit("judgeImage", this.animalImage.dataset.category, imgValue);
       } else {
         this.$playSound(dogSe);
+        this.$emit("judgeImage", this.animalImage.dataset.category);
       }
-      this.$emit("judgeImage", this.animalImage.dataset.category, imgValue);
     },
     countDownTimer() {
       if (this.filterNum > 0) {
