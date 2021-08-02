@@ -30,9 +30,9 @@ export default {
     shuffleInfo() {
       this.$emit("shuffleInfo", this.imageInfos);
     },
-    judgeImage(...targetImageValues) {
-      console.log(...targetImageValues);
-      this.$emit("judgeImage", ...targetImageValues);
+    judgeImage(animal) {
+      console.log(animal);
+      this.$emit("judgeImage", animal);
     },
   },
 };
