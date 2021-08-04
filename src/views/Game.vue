@@ -3,16 +3,16 @@
     <div class="loading-wrap" v-if="!loading">
       <div class="loader"></div>
       <p>狐とわんちゃんを{{ gotDataCount }}匹数呼び出しています...</p>
-      <ul>
-        <!-- <li v-for="(fact, factIdx) in facts" :key="factIdx">{{ facts[factIdx].description }}</li> -->
-        <!-- <li>{{ displayFactDescription }}</li> -->
-      </ul>
     </div>
 
-    <div v-if="showFlag">
-      <animals @judgeImage="judgeImage" :targetFoxCount="selectedDifficalty.fox" :imageInfos="imageInfos" @shuffleInfo="shuffleInfo" />
-      <timer @stopTimeHandler="stopTimer" ref="timer" class="mt-8" />
-      <result @showResult="showResult" :foundFoxes="foundFoxes" :wrongCount="wrongCount" ref="result"></result>
+    <div v-if="showGameFlag" :class="{ 'difficalty-easy': diffcaltyEasy, 'difficalty-normal': diffcaltyNormal, 'difficalty-hard': diffcaltyHard }">
+      <div class="container">
+        <animals @judgeImage="animalSelected" :targetFoxCount="selectedDifficalty.fox" :imageInfos="imageInfos" @shuffleInfo="shuffleInfo" />
+        <timer @timerTick="timer" :timerActive="!isFullSelect" class="mt-8" />
+        <v-dialog v-model="showResultFlag">
+          <result :wrongCount="wrongCount" :foundFoxes="foundFoxes" :accTime="accTime"></result>
+        </v-dialog>
+      </div>
     </div>
   </div>
 </template>
@@ -41,15 +41,16 @@ export default {
   data() {
     return {
       loading: false,
-      showFlag: false,
+      showGameFlag: false,
       gotDataCount: 0,
       imageInfos: [],
       foundFoxes: [],
       wrongCount: 0,
+      accTime: 0,
+      showResultFlag: false,
     };
   },
   async created() {
-    // this.$store.dispatch("game/fetchImages");
     const url = `https://dog.ceo/api/breeds/image/random/${this.selectedDifficalty.animals}`;
     const animals = await axios.get(url);
     animals.data.message.forEach((animal, index) => {
@@ -75,62 +76,66 @@ export default {
     this.imageInfos = _.shuffle(this.imageInfos);
 
     this.loading = true;
-    this.showFlag = true;
+    this.showGameFlag = true;
   },
 
   computed: {
-    // displayFactDescription() {
-    //   return setTimeout(() => {
-    //     return this.facts[2].description;
-    //   }, 3000);
-    // },
     // ...mapGetters({
-    //   difficalty: "game/difficalty",
-    //   imageInfos: "game/imageInfos",
-    //   gotDataCount: "game/gotDataCount",
-    //   loading: "game/loading",
-    //   showFlag: "game/showFlag",
+    //   accumTime: "game/accumTime",
+    //   wrongCount: "game/wrongCount",
     // }),
+    isFullSelect() {
+      // 規定のものから算出するもの
+      return this.foundFoxes.length === this.selectedDifficalty.fox;
+    },
+
+    diffcaltyEasy() {
+      return this.selectedDifficalty.key === "easy";
+    },
+
+    diffcaltyNormal() {
+      return this.selectedDifficalty.key === "normal";
+    },
+
+    diffcaltyHard() {
+      return this.selectedDifficalty.key === "hard";
+    },
   },
   methods: {
-    // shuffle([...array]) {
-    //   for (let i = array.length - 1; i >= 0; i--) {
-    //     const j = Math.floor(Math.random() * (i + 1));
-    //     [array[i], array[j]] = [array[j], array[i]];
-    //   }
-    //   return array;
-    // },
     shuffleInfo() {
       this.imageInfos = _.shuffle(this.imageInfos);
     },
+    setResultHistory() {
+      const resultInfo = {
+        wrongCount: this.wrongCount,
+        accumTime: this.accTime.toFixed(2),
+        selectedDifficalty: this.selectedDifficalty.name,
+      };
+      this.$store.commit("game/setResultHistory", resultInfo);
+    },
 
-    judgeImage(...targetImageValues) {
-      const [targetImageDatasetValue, targetImageSrcValue] = targetImageValues;
-      if (targetImageDatasetValue === "fox") {
-        this.foundFoxes.push(targetImageSrcValue);
-        console.log("this.foundFoxes.length=>", this.foundFoxes.length);
-        console.log("this.targetFoxCount=>", this.selectedDifficalty.fox);
-      } else {
-        this.wrongCount++;
-      }
-      if (this.foundFoxes.length === this.selectedDifficalty.fox) {
-        this.stopTimer();
+    animalSelected(animal) {
+      this.updateResult(animal, this.isFox(animal.category));
+
+      if (this.isFullSelect) {
         this.showResult();
-        return;
+        this.setResultHistory();
       }
     },
-    stopTimer() {
-      this.$refs.timer.stopTimeHandler();
+
+    updateResult(animal, result) {
+      if (result) this.foundFoxes.push(animal.imgValue);
+      if (!result) this.wrongCount++;
+    },
+    isFox(animalCategory) {
+      return animalCategory === "fox";
     },
     showResult() {
-      this.$refs.result.showResult();
+      this.showResultFlag = !this.showResultFlag;
     },
-    // shuffleInfoSec() {
-    //   setTimeout(() => {
-    //     this.shuffleInfo();
-    //   }, 2500);
-    //   this.shuffleInfoSec();
-    // },
+    timer(val) {
+      this.accTime = val;
+    },
   },
 };
 </script>
