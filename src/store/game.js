@@ -1,16 +1,19 @@
-// import axios from "axios";
-// import _ from "lodash";
-
 const state = {
-  accum: 0,
+  resultHistories: [],
 };
 const getters = {
-  accum(state) {
-    return state.accum;
+  resultHistories(state) {
+    return state.resultHistories;
   },
 };
 const mutations = {
-
+  setResultHistory(state, payload) {
+    if (state.resultHistories.length === 5) {
+      state.resultHistories.shift();
+    }
+    state.resultHistories.push(payload);
+    localStorage.setItem("result", JSON.stringify(state.resultHistories));
+  },
 };
 const actions = {};
 
