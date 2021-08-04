@@ -34,13 +34,14 @@ export default {
   },
   methods: {
     judgeImage(imgValue) {
-      if (this.animalImage.dataset.category === "fox") {
+      const animalCategory = this.animalImage.dataset.category;
+      if (animalCategory === "fox") {
         this.isFox = true;
         this.$playSound(foxSe);
-        this.$emit("judgeImage", this.animalImage.dataset.category, imgValue);
+        this.$emit("judgeImage", { category: animalCategory, imgValue });
       } else {
         this.$playSound(dogSe);
-        this.$emit("judgeImage", this.animalImage.dataset.category);
+        this.$emit("judgeImage", { category: animalCategory });
       }
     },
     countDownTimer() {
