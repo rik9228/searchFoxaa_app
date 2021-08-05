@@ -13,9 +13,14 @@
         </figure>
       </div>
 
-      <div class="pa-5">
-        <v-card-text class="pa-0 text-h6">間違えた数：{{ wrongCount }}</v-card-text>
-        <v-card-text class="pa-0 text-h6">かかった時間：{{ accTime.toFixed(2) }}秒</v-card-text>
+      <div class="pa-5 text-h5 font-weight-bold">
+        <!-- accTime View -->
+        <animated-number :value="accTime" :format-value="formatToAccTime" :duration="2000"></animated-number>
+      </div>
+
+      <div class="pa-5 text-h5 font-weight-bold">
+        <!-- wrongCount View -->
+        <animated-number :value="wrongCount" :format-value="formatToWrongCount" :duration="2000" :delay="2200"></animated-number>
       </div>
 
       <v-divider></v-divider>
@@ -33,9 +38,13 @@
 </template>
 
 <script>
+import AnimatedNumber from "animated-number-vue";
 // import { mapGetters } from "vuex";
 export default {
   name: "result",
+  components: {
+    AnimatedNumber,
+  },
   props: {
     foundFoxes: {
       type: Array,
@@ -58,11 +67,13 @@ export default {
       },
     };
   },
-  computed: {
-    // ...mapGetters({
-    //   wrongCount: "game/wrongCount",
-    //   accumTime: "game/accumTime",
-    // }),
+  methods: {
+    formatToAccTime: function(value) {
+      return `かかった時間： ${value.toFixed(2)}秒`;
+    },
+    formatToWrongCount: function(value) {
+      return `間違えた数： ${value.toFixed(0)}`;
+    },
   },
 };
 </script>
