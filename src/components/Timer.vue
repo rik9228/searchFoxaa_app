@@ -7,15 +7,6 @@
 <script>
 export default {
   name: "Timer",
-  // data() {
-  //   return {
-  //     active: false, // 実行状態
-  //     start: 0, // startを押した時刻
-  //     timer: 0, // setInterval()の格納用
-  //     interval: 0, // 計測時間
-  //     accumTime: 0, // 累積時間(stopしたとき用)
-  //   };
-  // },
   data() {
     return {
       time: 0,
