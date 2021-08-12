@@ -1,7 +1,6 @@
 <template>
-  <div :key="image.id" :class="{ fox: isFox }" class="image-wrap">
-    <img v-if="image.category === 'dog'" class="image" :src="image.src" @click="judgeImage(image.src)" data-category="dog" ref="image" />
-    <img v-else class="image" :src="image.src" @click="judgeImage(image.src)" data-category="fox" ref="image" />
+  <div class="animal-image-wrap" :class="{ fox: isSelected }">
+    <img @click="onClick" :src="animal.src" :style="cssVar" />
   </div>
 </template>
 
@@ -11,50 +10,52 @@ import foxSe from "@/assets/sounds/fox_se.mp3";
 export default {
   name: "animal",
   props: {
-    image: {
+    animal: {
       type: Object,
       require: true,
     },
-    targetFoxCount: {
-      type: Number,
-      require: true,
-    },
+    blurOn: { type: Boolean, default: true },
   },
   data() {
     return {
-      filterNum: 8,
-      animalImage: null,
-      isFox: false,
+      blurNum: 8,
+      isSelected: false,
     };
   },
   mounted() {
-    // $refsは仮想DOMが生成されてある必要があるので、必ず「mounted」以降で行う
-    this.animalImage = this.$refs.image;
-    this.countDownTimer(this.animalImage);
+    if (!this.blurOn) return;
+    setInterval(() => {
+      this.removeBlur();
+    }, 2500);
+  },
+  computed: {
+    cssVar() {
+      if (this.blurOn) return `--filter-num: ${this.blurNum}px`;
+      return "--filter-num: 0px";
+    },
   },
   methods: {
-    judgeImage(imgValue) {
-      const animalCategory = this.animalImage.dataset.category;
-      if (animalCategory === "fox") {
-        this.isFox = true;
+    onClick() {
+      // const animalCategory = this.animalImage.dataset.category;
+      if (this.animal.category === "fox") {
         this.$playSound(foxSe);
-        this.$emit("judgeImage", { category: animalCategory, imgValue });
-      } else {
-        this.$playSound(dogSe);
-        this.$emit("judgeImage", { category: animalCategory });
+        this.isSelected = true;
       }
+      if (this.animal.category === "dog") this.$playSound(dogSe);
+
+      this.$emit("click", this.animal);
     },
-    countDownTimer() {
-      if (this.filterNum > 0) {
-        setTimeout(() => {
-          this.filterNum--;
-          this.animalImage.style.filter = `blur(${this.filterNum}px)`;
-          this.countDownTimer();
-        }, 2500);
+    removeBlur() {
+      if (this.blurNum > 0) {
+        this.blurNum--;
       }
     },
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+img {
+  filter: blur(var(--filter-num));
+}
+</style>
