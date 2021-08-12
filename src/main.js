@@ -2,7 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import css from "./assets/css/style.css";
-import store from "@/store.js";
+import store from "./store/index.js";
 import vuetify from "./plugins/vuetify";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
