@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-btn @click="shuffleInfo" class="success">並べ替え</v-btn>
-    <transition-group tag="div" class="dogList">
-      <div class="images" v-for="image in imageInfos" :key="image.id">
-        <animal @judgeImage="judgeImage" :targetFoxCount="targetFoxCount" :image="image"></animal>
+    <v-btn @click="shuffleAnimals" class="success mt-5">シャッフル</v-btn>
+    <transition-group tag="div" class="dogList mt-5">
+      <div class="images" v-for="animal in animals" :key="animal.id">
+        <animal @click="onSelected" :animal="animal"></animal>
       </div>
     </transition-group>
   </div>
@@ -17,22 +17,18 @@ export default {
     animal,
   },
   props: {
-    imageInfos: {
+    animals: {
       type: Array,
-      require: true,
-    },
-    targetFoxCount: {
-      type: Number,
       require: true,
     },
   },
   methods: {
-    shuffleInfo() {
-      this.$emit("shuffleInfo", this.imageInfos);
+    shuffleAnimals() {
+      this.$emit("shuffleAnimals");
     },
-    judgeImage(animal) {
+    onSelected(animal) {
       console.log(animal);
-      this.$emit("judgeImage", animal);
+      this.$emit("selected", animal);
     },
   },
 };
