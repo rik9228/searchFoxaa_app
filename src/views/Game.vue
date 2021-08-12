@@ -5,12 +5,28 @@
       <p>狐とわんちゃんを{{ gotDataCount }}匹数呼び出しています...</p>
     </div>
 
-    <div v-if="showGameFlag" :class="{ 'difficalty-easy': diffcaltyEasy, 'difficalty-normal': diffcaltyNormal, 'difficalty-hard': diffcaltyHard }">
-      <div class="container">
-        <animals @judgeImage="animalSelected" :targetFoxCount="selectedDifficalty.fox" :imageInfos="imageInfos" @shuffleInfo="shuffleInfo" />
+    <div
+      v-if="showGameFlag"
+      :class="{
+        'difficalty-easy': diffcaltyEasy,
+        'difficalty-normal': diffcaltyNormal,
+        'difficalty-hard': diffcaltyHard,
+      }"
+    >
+      <div class="container mt-5 pa-0">
         <timer @timerTick="timer" :timerActive="!isFullSelect" class="mt-8" />
-        <v-dialog v-model="showResultFlag">
-          <result :wrongCount="wrongCount" :foundFoxes="foundFoxes" :accTime="accTime"></result>
+        <animalList
+          @selected="onAnimalSelected"
+          :targetFoxCount="selectedDifficalty.fox"
+          :animals="animals"
+          @shuffleInfo="shuffleInfo"
+        />
+        <v-dialog v-model="showResultFlag" persistent>
+          <result
+            :wrongCount="wrongCount"
+            :foundFoxes="foundFoxes"
+            :accTime="accTime"
+          ></result>
         </v-dialog>
       </div>
     </div>
@@ -20,7 +36,7 @@
 <script>
 // import { mapGetters } from "vuex";
 import axios from "axios";
-import animals from "@/components/Animals.vue";
+import animalList from "@/components/Animals.vue";
 import result from "@/components/Result.vue";
 import timer from "@/components/Timer.vue";
 import _ from "lodash";
@@ -28,7 +44,7 @@ import _ from "lodash";
 export default {
   name: "Game",
   components: {
-    animals,
+    animalList,
     timer,
     result,
   },
@@ -43,7 +59,7 @@ export default {
       loading: false,
       showGameFlag: false,
       gotDataCount: 0,
-      imageInfos: [],
+      animals: [],
       foundFoxes: [],
       wrongCount: 0,
       accTime: 0,
@@ -54,26 +70,26 @@ export default {
     const url = `https://dog.ceo/api/breeds/image/random/${this.selectedDifficalty.animals}`;
     const animals = await axios.get(url);
     animals.data.message.forEach((animal, index) => {
-      this.imageInfos.push({
+      this.animals.push({
         src: animal,
         category: "dog",
         id: index,
       });
     });
-    this.gotDataCount = this.imageInfos.length;
+    this.gotDataCount = this.animals.length;
 
     for (let i = 0; i < this.selectedDifficalty.fox; i++) {
       const url = "https://randomfox.ca/floof/";
       const result = await axios.get(url);
-      this.imageInfos.push({
+      this.animals.push({
         src: result.data.image,
         category: "fox",
-        id: this.imageInfos.length + 1,
+        id: this.animals.length + 1,
       });
       this.gotDataCount++;
     }
 
-    this.imageInfos = _.shuffle(this.imageInfos);
+    this.animals = _.shuffle(this.animals);
 
     this.loading = true;
     this.showGameFlag = true;
@@ -103,7 +119,7 @@ export default {
   },
   methods: {
     shuffleInfo() {
-      this.imageInfos = _.shuffle(this.imageInfos);
+      this.animals = _.shuffle(this.animals);
     },
     setResultHistory() {
       const resultInfo = {
@@ -111,10 +127,11 @@ export default {
         accumTime: this.accTime.toFixed(2),
         selectedDifficalty: this.selectedDifficalty.name,
       };
-      this.$store.commit("game/setResultHistory", resultInfo);
+      this.$store.dispatch("game/saveResultHistory", resultInfo);
     },
 
-    animalSelected(animal) {
+    onAnimalSelected(animal) {
+      console.table("animal=>", animal);
       this.updateResult(animal, this.isFox(animal.category));
 
       if (this.isFullSelect) {
@@ -124,7 +141,7 @@ export default {
     },
 
     updateResult(animal, result) {
-      if (result) this.foundFoxes.push(animal.imgValue);
+      if (result) this.foundFoxes.push(animal.src);
       if (!result) this.wrongCount++;
     },
     isFox(animalCategory) {
