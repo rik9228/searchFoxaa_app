@@ -6,6 +6,12 @@
   color: #2c3e50;
 }
 
+.toolbar-title {
+  color: inherit;
+  text-decoration: none;
+  color: #fff !important;
+}
+
 #nav {
   padding: 30px;
 }
@@ -40,10 +46,6 @@ a {
   height: auto;
   margin: 16px 0;
   border-radius: 10px;
-}
-
-.dogList {
-  margin-top: 40px;
 }
 
 .loader,
@@ -95,20 +97,20 @@ a {
   gap: 16px;
 }
 
-.image-wrap {
+.animal-image-wrap {
   position: relative;
 }
 
-.image-wrap {
+.animal-image-wrap {
   position: relative;
   overflow: hidden;
 }
 
-.image-wrap.fox {
+.animal-image-wrap.fox {
   pointer-events: none;
 }
 
-.image-wrap.fox::before {
+.animal-image-wrap.fox::before {
   content: "";
   display: block;
   width: 100%;
@@ -120,12 +122,12 @@ a {
   z-index: 10;
 }
 
-.image {
+.animal-image-wrap img {
   width: 100%;
   height: 50px;
   object-fit: cover;
   display: block;
-  filter: blur(8px);
+  /* filter: blur(8px); */
   user-drag: none;
   -webkit-user-drag: none;
   -moz-user-select: none;
@@ -187,7 +189,7 @@ a {
 
 .result-dialog__wrapper {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   width: 50%;
   margin: 0 auto;
   gap: 32px;
@@ -204,8 +206,8 @@ a {
 .difficalty-easy,
 .difficalty-normal,
 .difficalty-hard {
-  position: fixed;
-  top: 0;
+  position: absolute;
+  top: 64px;
   left: 0;
   width: 100vw;
   height: 100vh;
