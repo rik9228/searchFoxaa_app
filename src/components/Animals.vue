@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn @click="shuffleAnimals" class="success mt-5">シャッフル</v-btn>
+    <v-btn @click="onClick" class="success mt-5">シャッフル</v-btn>
     <transition-group tag="div" class="dogList mt-5">
       <div class="images" v-for="animal in animals" :key="animal.id">
         <animal @click="onSelected" :animal="animal"></animal>
@@ -23,8 +23,8 @@ export default {
     },
   },
   methods: {
-    shuffleAnimals() {
-      this.$emit("shuffleAnimals");
+    onClick() {
+      this.$emit("onClick");
     },
     onSelected(animal) {
       console.log(animal);

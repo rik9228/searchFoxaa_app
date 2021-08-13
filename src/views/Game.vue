@@ -19,7 +19,7 @@
           @selected="onAnimalSelected"
           :targetFoxCount="selectedDifficalty.fox"
           :animals="animals"
-          @shuffleInfo="shuffleInfo"
+          @onClick="shuffleAnimals"
         />
         <v-dialog v-model="showResultFlag" persistent>
           <result
@@ -118,7 +118,7 @@ export default {
     },
   },
   methods: {
-    shuffleInfo() {
+    shuffleAnimals() {
       this.animals = _.shuffle(this.animals);
     },
     setResultHistory() {
